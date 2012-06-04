@@ -29,6 +29,13 @@
 
     <!-- Styles -->
     <style>
+body {
+    color: white;
+    background-color: black;
+    font-family: "Segoe UI";
+    font-size: 18px;
+}
+
 .CodeMirror {
     font-size: 18px;
     width: 50%;
@@ -37,18 +44,36 @@
 .CodeMirror-scroll {
     height: 100vh;
 }    
+
+#output {
+    position: absolute;
+    top: 0px;
+    width: 50vw;
+    left: 50vw;
+    height: 100vh;
+    margin-left: 20px;
+}
     </style>
 
 </head>
 <body>
     <div id="editor"></div>
-
+    <div id="output"></div>
     <script>
     var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
         lineNumbers: true,
         indentUnit: 2,
-        theme: "lesser-dark"
+        theme: "lesser-dark",
+        keyMap: "html_editor"
     });
+
+    CodeMirror.keyMap.html_editor = {
+        'Ctrl-Enter': function (cm) {
+            var html = editor.getValue();
+            output.innerHTML = window.toStaticHTML(html);
+        },
+        fallthrough: ["default"]
+    };
     </script>
 
 	<div data-win-control="WinJS.UI.AppBar">
