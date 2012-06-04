@@ -63,6 +63,8 @@
         } else {
             Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.getFileAsync(app.file_token).done(function (file) {
                 if (file) {
+                    // Squirrel away a token for future access
+                    app.file_token = Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
                     Windows.Storage.FileIO.writeTextAsync(file, text);
                 }
             });

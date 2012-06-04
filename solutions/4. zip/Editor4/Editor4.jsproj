@@ -32,7 +32,7 @@
     <ProjectConfiguration Include="Release|x86">
       <Configuration>Release</Configuration>
       <Platform>x86</Platform>
-    </ProjectConfiguration>  
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>f217ea10-0c69-4e03-84ab-35ec3360a56d</ProjectGuid>
@@ -50,13 +50,20 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="css\codemirror.css" />
+    <Content Include="css\lesser-dark.css" />
     <Content Include="default.html" />
     <Content Include="images\logo.png" />
     <Content Include="images\smalllogo.png" />
     <Content Include="images\splashscreen.png" />
     <Content Include="images\storelogo.png" />
+    <Content Include="js\codemirror.js" />
+    <Content Include="js\css.js" />
     <Content Include="js\default.js" />
     <Content Include="css\default.css" />
+    <Content Include="js\htmlmixed.js" />
+    <Content Include="js\javascript.js" />
+    <Content Include="js\xml.js" />
     <None Include="Editor4_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
