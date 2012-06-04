@@ -31,12 +31,12 @@
         var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
         openPicker.viewMode = Windows.Storage.Pickers.PickerViewMode.list;
         openPicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
-        openPicker.fileTypeFilter.replaceAll([".htm"]);
+        openPicker.fileTypeFilter.replaceAll([".htm", ".zip"]);
 
         openPicker.pickSingleFileAsync().done(function (file) {
             // Squirrel away a token for future access
             app.file_token = Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
-            Windows.Storage.FileIO.readTextAsync(file).done(function (html) {
+            ZipHelper.Zip.open(file).done(function (html) {
                 var regex = /\"\/\/(.*?)\"/ig;
                 var result = html.replace(regex, "\"http://$1\"");
 
