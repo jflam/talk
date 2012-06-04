@@ -24,6 +24,9 @@
         // This won't work
         var file = Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("hello.html")
         var text = Windows.Storage.FileIO.readTextAsync(file);
+
+        // This will work.
+
     };
 
     app.onloaded = function (args) {
