@@ -45,9 +45,6 @@
             // Squirrel away a token for future access
             app.file_token = Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
             ZipHelper.Zip.open(file).done(function (html) {
-                var regex = /\"\/\/(.*?)\"/ig;
-                var result = html.replace(regex, "\"http://$1\"");
-
                 var clean_html = window.toStaticHTML(result);
                 app.editor.setValue(clean_html);
             });
