@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <style>
+      body { font-family: "Segoe UI"; font-size: 18px; background-color: black; color: white; }
+      #editor { height: 90vh; width: 50vw; border: 0px; position: absolute; background-color: black; color: white; font-size: 18px; }
+      #output { left: 50vw; width: 50vw; top: 0px; position: absolute; margin-left: 20px; }
+    </style>
+  </head>
+  <body>
+    <textarea id="editor"><b>hello </b>, world!</textarea>
+    <div id="output"></div>
+    <script>
+    window.onload = function() {
+      editor.onkeyup = function(args) {
+        if (args.ctrlKey && args.key == "Enter") {
+          output.innerHTML = editor.innerText;
+        }
+      };
+    };
+    </script>
+  </body>
+</html>
