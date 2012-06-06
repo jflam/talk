@@ -20,6 +20,7 @@ copy ${env:github_talk}\libs\js\* ${env:talk}\Editor\js
 #IfWinActive, ahk_class ConsoleWindowClass
 ::clean1::
 (
+cd \
 rd -Force -Recurse ${env:talk}
 md ${env:talk}
 cd ${env:talk}
@@ -247,7 +248,7 @@ return
 clipboard =
 (
     <script>
-      var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+      WinJS.Application.editor  = CodeMirror.fromTextArea(document.getElementById("editor"), {
           lineNumbers: true,
           indentUnit: 2,
           theme: "lesser-dark",
@@ -256,12 +257,140 @@ clipboard =
           
       CodeMirror.keyMap.html_editor = {
           'Ctrl-Enter': function (cm) {
-              var html = editor.getValue();
+              var html = WinJS.Application.editor.getValue();
               output.innerHTML = window.toStaticHTML(html);
           },
           fallthrough: ["default"]
       };
     </script>
+)
+send ^v
+return
+;*********************************************************************
+; Commands for Part 3
+;*********************************************************************
+::r12::
+clipboard =
+(
+    app.onloaded = function (args) {
+        document.getElementById("cmdOpen").addEventListener("click", app.open_file);
+    }
+)
+send ^v
+return
+::r13::
+clipboard =
+(
+    app.open_file = function (args) {
+        var file = Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("hello.html")
+        var text = Windows.Storage.FileIO.readTextAsync(file);
+    }
+)
+send ^v
+return
+::r14::
+clipboard =
+(
+    app.open_file = function (args) {
+        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+        openPicker.viewMode = Windows.Storage.Pickers.PickerViewMode.list;
+        openPicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+        openPicker.fileTypeFilter.replaceAll([".htm"]);
+
+        openPicker.pickSingleFileAsync().done(function (file) {
+            Windows.Storage.FileIO.readTextAsync(file).done(function (html) {
+                var clean_html = window.toStaticHTML(html);
+                app.editor.setValue(clean_html);
+            });
+        });
+    };
+)
+send ^v
+return
+::r15::
+clipboard =
+(
+        <button id="cmdSave" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{icon:'save', label:'Save', section:'global', tooltip:'Save', type:'button'}"></button>
+)
+send ^v
+return
+::r16::
+clipboard =
+(
+        document.getElementById("cmdSave").addEventListener("click", app.save_file);
+)
+send ^v
+return
+::r17::
+clipboard =
+(
+    app.save_file = function (args) {
+        var text = app.editor.getValue();
+        var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+        savePicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+        savePicker.defaultFileExtension = ".htm";
+        savePicker.suggestedFileName = "my_html";
+        savePicker.fileTypeChoices.insert("HTML", [".htm"]);
+
+        savePicker.pickSaveFileAsync().done(function (file) {
+            if (file) {
+                Windows.Storage.FileIO.writeTextAsync(file, text);
+            }
+        });
+    };
+)
+send ^v
+return
+::r18::
+clipboard =
+(
+    app.open_file = function (args) {
+        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+        openPicker.viewMode = Windows.Storage.Pickers.PickerViewMode.list;
+        openPicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+        openPicker.fileTypeFilter.replaceAll([".htm"]);
+
+        openPicker.pickSingleFileAsync().done(function (file) {
+            // Squirrel away a token for future access
+            app.file_token = Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
+            Windows.Storage.FileIO.readTextAsync(file).done(function (html) {
+                var clean_html = window.toStaticHTML(html);
+                app.editor.setValue(clean_html);
+            });
+        });
+    };
+)
+send ^v
+return
+::r19::
+clipboard =
+(
+    app.file_token = null;
+
+    app.save_file = function (args) {
+        var text = app.editor.getValue();
+        if (app.file_token == null) {
+            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+            savePicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+            savePicker.defaultFileExtension = ".htm";
+            savePicker.suggestedFileName = "my_html";
+            savePicker.fileTypeChoices.insert("HTML", [".htm"]);
+
+            savePicker.pickSaveFileAsync().done(function (file) {
+                if (file) {
+                    // Squirrel away a token for future access
+                    app.file_token = Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
+                    Windows.Storage.FileIO.writeTextAsync(file, text);
+                }
+            });
+        } else {
+            Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.getFileAsync(app.file_token).done(function (file) {
+                if (file) {
+                    Windows.Storage.FileIO.writeTextAsync(file, text);
+                }
+            });
+        }
+    };
 )
 send ^v
 return
