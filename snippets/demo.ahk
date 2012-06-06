@@ -20,6 +20,7 @@ copy ${env:github_talk}\libs\js\* ${env:talk}\Editor\js
 #IfWinActive, ahk_class ConsoleWindowClass
 ::clean1::
 (
+rd -Force -Recurse ${env:talk}
 md ${env:talk}
 cd ${env:talk}
 rd -Force -Recurse css
@@ -28,10 +29,11 @@ $null | Set-Content default.html
 ls
 )
 ;*********************************************************************
-; Commands for HTML editors
+; Commands for Part 1
 ;*********************************************************************
 #IfWinActive
 ::cat1::
+clipboard =
 (
 <h1>Hello, World!</h1>
 
@@ -40,7 +42,11 @@ ls
 <img src="http://www.hotimg.com/direct/dATedwu.gif">
 <img src="http://www.hotimg.com/direct/dATedwu.gif">
 )
+send ^v
+return
+#IfWinActive, ahk_class Notepad2
 ::r1::
+clipboard =
 (
 <html> 
   <body>
@@ -58,7 +64,11 @@ ls
   </body>
 </html>
 )
+send ^v
+return
+#IfWinActive, ahk_class Notepad2
 ::r2::
+clipboard =
 (
   <head>
     <style>
@@ -68,7 +78,11 @@ ls
     </style>
   </head>
 )
+send ^v
+return
+#IfWinActive, ahk_class Notepad2
 ::r3::
+clipboard =
 (
     <!-- CodeMirror JS References -->
     <script src="js/codemirror.js"></script>
@@ -78,14 +92,22 @@ ls
     <script src="js/javascript.js"></script>
     
 )
+send ^v
+return
+#IfWinActive, ahk_class Notepad2
 ::r4::
+clipboard =
 (
     <!-- CSS References -->
     <link rel="stylesheet" href="css/codemirror.css" />
     <link rel="stylesheet" href="css/lesser-dark.css" />
     
 )
+send ^v
+return
+#IfWinActive, ahk_class Notepad2
 ::r5::
+clipboard =
 (
     <style>
       body {
@@ -97,7 +119,7 @@ ls
 
       .CodeMirror {
           font-size: 18px;
-          width: 50%;
+          width: 50`%;
       }
 
       .CodeMirror-scroll {
@@ -114,11 +136,19 @@ ls
       }
     </style>
 )
+send ^v
+return
+#IfWinActive, ahk_class Notepad2
 ::r6::
+clipboard =
 (
      <div id="editor"></div>
 )
+send ^v
+return
+#IfWinActive, ahk_class Notepad2
 ::r7::
+clipboard =
 (
     <script>
       var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
@@ -137,7 +167,14 @@ ls
       };
     </script>
 )
+send ^v
+return
+;*********************************************************************
+; Commands for Part 2 
+;*********************************************************************
+#IfWinNotActive, ahk_class Notepad2
 ::r8::
+clipboard =
 (
     <textarea id="editor" cols="80" rows="10">&lt;h1&gt;hello, world&lt;/h1&gt;</textarea>
     <div id="output"></div>
@@ -151,7 +188,11 @@ ls
     };
     </script>
 )
+send ^v
+return
+#IfWinNotActive, ahk_class Notepad2
 ::r9::
+clipboard =
 (
     <!-- CodeMirror JS References -->
     <script src="js/codemirror.js"></script>
@@ -174,7 +215,7 @@ ls
 
       .CodeMirror {
           font-size: 18px;
-          width: 50%;
+          width: 50`%;
       }
 
       .CodeMirror-scroll {
@@ -191,11 +232,19 @@ ls
       }
     </style>
 )
+send ^v
+return
+#IfWinNotActive, ahk_class Notepad2
 ::r10::
+clipboard =
 (
      <div id="editor"></div>
 )
+send ^v
+return
+#IfWinNotActive, ahk_class Notepad2
 ::r11::
+clipboard =
 (
     <script>
       var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
@@ -214,3 +263,5 @@ ls
       };
     </script>
 )
+send ^v
+return
