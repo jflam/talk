@@ -7,14 +7,15 @@
 (
 mkdir css
 mkdir js
-copy ..\libs\css\* css
-copy ..\libs\js\* js
+copy ${env:github_talk}\libs\css\* css
+copy ${env:github_talk}\libs\js\* js
 )
 ; Cleanup the demo directory -- assumes %TALK% env variable is set
 #IfWinActive, ahk_class ConsoleWindowClass
 ::clean1::
 (
-cd ${env:talk}\demo
+md ${env:talk}
+cd ${env:talk}
 rd -Force -Recurse css
 rd -Force -Recurse js
 $null | Set-Content default.html
@@ -113,20 +114,20 @@ ls
 )
 ::r7::
 (
-<script>
-    var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-        lineNumbers: true,
-        indentUnit: 2,
-        theme: "lesser-dark",
-        keyMap: "html_editor"
-    });
-        
-    CodeMirror.keyMap.html_editor = {
-        'Ctrl-Enter': function (cm) {
-            var html = editor.getValue();
-            output.innerHTML = window.toStaticHTML(html);
-        },
-        fallthrough: ["default"]
-    };
-</script>
+    <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+          lineNumbers: true,
+          indentUnit: 2,
+          theme: "lesser-dark",
+          keyMap: "html_editor"
+      });
+          
+      CodeMirror.keyMap.html_editor = {
+          'Ctrl-Enter': function (cm) {
+              var html = editor.getValue();
+              output.innerHTML = window.toStaticHTML(html);
+          },
+          fallthrough: ["default"]
+      };
+    </script>
 )
