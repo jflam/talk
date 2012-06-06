@@ -10,6 +10,12 @@ mkdir js
 copy ${env:github_talk}\libs\css\* css
 copy ${env:github_talk}\libs\js\* js
 )
+; Copy files to the right places for the Metro style app
+::c2::
+(
+copy ${env:github_talk}\libs\css\* ${env:talk}\Editor\css
+copy ${env:github_talk}\libs\js\* ${env:talk}\Editor\js
+)
 ; Cleanup the demo directory -- assumes %TALK% env variable is set
 #IfWinActive, ahk_class ConsoleWindowClass
 ::clean1::
@@ -113,6 +119,83 @@ ls
      <div id="editor"></div>
 )
 ::r7::
+(
+    <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+          lineNumbers: true,
+          indentUnit: 2,
+          theme: "lesser-dark",
+          keyMap: "html_editor"
+      });
+          
+      CodeMirror.keyMap.html_editor = {
+          'Ctrl-Enter': function (cm) {
+              var html = editor.getValue();
+              output.innerHTML = window.toStaticHTML(html);
+          },
+          fallthrough: ["default"]
+      };
+    </script>
+)
+::r8::
+(
+    <textarea id="editor" cols="80" rows="10">&lt;h1&gt;hello, world&lt;/h1&gt;</textarea>
+    <div id="output"></div>
+    <script>
+    window.onload = function() {
+      editor.onkeyup = function(args) {
+        if (args.ctrlKey && args.key == "Enter") {
+          output.innerHTML = editor.innerText;
+        }
+      };
+    };
+    </script>
+)
+::r9::
+(
+    <!-- CodeMirror JS References -->
+    <script src="js/codemirror.js"></script>
+    <script src="js/htmlmixed.js"></script>
+    <script src="js/css.js"></script>
+    <script src="js/xml.js"></script>
+    <script src="js/javascript.js"></script>
+
+    <!-- CSS References -->
+    <link rel="stylesheet" href="css/codemirror.css" />
+    <link rel="stylesheet" href="css/lesser-dark.css" />
+    
+    <style>
+      body {
+          color: white;
+          background-color: black;
+          font-family: "Segoe UI";
+          font-size: 18px;
+      }
+
+      .CodeMirror {
+          font-size: 18px;
+          width: 50%;
+      }
+
+      .CodeMirror-scroll {
+          height: 100vh;
+      }    
+
+      #output {
+          position: absolute;
+          top: 0px;
+          width: 50vw;
+          left: 50vw;
+          height: 100vh;
+          margin-left: 20px;
+      }
+    </style>
+)
+::r10::
+(
+     <div id="editor"></div>
+)
+::r11::
 (
     <script>
       var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
