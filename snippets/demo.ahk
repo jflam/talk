@@ -37,12 +37,12 @@ ls
 ::cat1::
 clipboard =
 (
-<h1>Iz can, danss!</h1>
+<h1>Iz can danss!</h1>
 
-<img src="http://www.hotimg.com/direct/dATedwu.gif">
-<img src="http://www.hotimg.com/direct/dATedwu.gif">
-<img src="http://www.hotimg.com/direct/dATedwu.gif">
-<img src="http://www.hotimg.com/direct/dATedwu.gif">
+<img src="http://localhost/cat.gif">
+<img src="http://localhost/cat.gif">
+<img src="http://localhost/cat.gif">
+<img src="http://localhost/cat.gif">
 )
 send ^v
 return
