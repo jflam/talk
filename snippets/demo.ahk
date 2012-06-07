@@ -543,3 +543,29 @@ return
 clipboard = http://en.wikipedia.org/w/api.php?action=opensearch&search=
 send ^v
 return
+::r25::
+clipboard =
+(
+    app.onactivated = function (args) {
+        if (args.detail.kind === activation.ActivationKind.launch) {
+            if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
+                // TODO: This application has been newly launched. Initialize
+                // your application here.
+            } else {
+                // TODO: This application has been reactivated from suspension.
+                // Restore application state here.
+            }
+            args.setPromise(WinJS.UI.processAll());
+        } else if (args.detail.kind === activation.ActivationKind.search) {
+            var term = args.detail.queryText;
+            var url = "http://en.wikipedia.org/wiki/" + encodeURIComponent(term.replace(" ", "_"));
+            WinJS.xhr({ url: url }).done(function (response) {
+                if (response.responseText) {
+                    app.editor.setValue(response.responseText);
+                }
+            });
+        }
+    };
+)
+send ^v
+return
