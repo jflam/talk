@@ -1,4 +1,4 @@
-CodeMirror.defineMode("xml", function(config, parserConfig) {
+﻿CodeMirror.defineMode("xml", function(config, parserConfig) {
   var indentUnit = config.indentUnit;
   var Kludges = parserConfig.htmlMode ? {
     autoSelfClosers: {'area': true, 'base': true, 'br': true, 'col': true, 'command': true,
