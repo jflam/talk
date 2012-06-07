@@ -5,6 +5,7 @@
 #IfWinActive, ahk_class ConsoleWindowClass
 ::c1::
 (
+cd ${env:talk}
 mkdir css
 mkdir js
 copy ${env:github_talk}\libs\css\* css
@@ -36,7 +37,7 @@ ls
 ::cat1::
 clipboard =
 (
-<h1>oh hai, world!</h1>
+<h1>Iz can, danss!</h1>
 
 <img src="http://www.hotimg.com/direct/dATedwu.gif">
 <img src="http://www.hotimg.com/direct/dATedwu.gif">
@@ -45,7 +46,6 @@ clipboard =
 )
 send ^v
 return
-#IfWinActive, ahk_class Notepad2
 ::r1::
 clipboard =
 (
@@ -67,7 +67,6 @@ clipboard =
 )
 send ^v
 return
-#IfWinActive, ahk_class Notepad2
 ::r2::
 clipboard =
 (
@@ -81,7 +80,6 @@ clipboard =
 )
 send ^v
 return
-#IfWinActive, ahk_class Notepad2
 ::r3::
 clipboard =
 (
@@ -95,7 +93,6 @@ clipboard =
 )
 send ^v
 return
-#IfWinActive, ahk_class Notepad2
 ::r4::
 clipboard =
 (
@@ -106,7 +103,6 @@ clipboard =
 )
 send ^v
 return
-#IfWinActive, ahk_class Notepad2
 ::r5::
 clipboard =
 (
@@ -139,7 +135,6 @@ clipboard =
 )
 send ^v
 return
-#IfWinActive, ahk_class Notepad2
 ::r6::
 clipboard =
 (
@@ -147,7 +142,6 @@ clipboard =
 )
 send ^v
 return
-#IfWinActive, ahk_class Notepad2
 ::r7::
 clipboard =
 (
@@ -298,7 +292,7 @@ clipboard =
 )
 send ^v
 return
-::r16::
+::r15::
 clipboard =
 (
     app.open_file = function (args) {
@@ -317,21 +311,21 @@ clipboard =
 )
 send ^v
 return
-::r17::
+::r16::
 clipboard =
 (
         <button id="cmdSave" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{icon:'save', label:'Save', section:'global', tooltip:'Save', type:'button'}"></button>
 )
 send ^v
 return
-::r18::
+::r17::
 clipboard =
 (
         document.getElementById("cmdSave").addEventListener("click", app.save_file);
 )
 send ^v
 return
-::r19::
+::r18::
 clipboard =
 (
     app.file_token = null;
@@ -363,7 +357,7 @@ clipboard =
 )
 send ^v
 return
-::r20::
+::r19::
 clipboard =
 (
     app.open_file = function (args) {
@@ -387,7 +381,7 @@ return
 ;*********************************************************************
 ; Commands for Part 4
 ;*********************************************************************
-::r21::
+::r20::
 clipboard = 
 (
 using System;
@@ -452,7 +446,7 @@ namespace Zip
 )
 send ^v
 return
-::r22::
+::r21::
 clipboard = 
 (
             if (file.fileType == ".zip") {
@@ -469,15 +463,6 @@ clipboard =
 )
 send ^v
 return
-::r21::
-clipboard = 
-(
-)
-send ^v
-return
-::r21::
-clipboard = 
-(
-)
-send ^v
-return
+;*********************************************************************
+; Commands for Part 5
+;*********************************************************************
