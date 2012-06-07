@@ -20,37 +20,41 @@
         }
     };
 
+    // Some aliases to make the code easier to read
+    var Pickers = Windows.Storage.Pickers;
+    var FileIO = Windows.Storage.FileIO;
+    var AccessCache = Windows.Storage.AccessCache;
+
     app.file_token = null;
 
     app.open_file = function (args) {
-        // This won't work
-        //var file = Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("hello.html")
-        //var text = Windows.Storage.FileIO.readTextAsync(file);
-
-        // This will work.
-        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
-        openPicker.viewMode = Windows.Storage.Pickers.PickerViewMode.list;
-        openPicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+        var openPicker = new Pickers.FileOpenPicker();
+        openPicker.viewMode = Pickers.PickerViewMode.list;
+        openPicker.suggestedStartLocation = Pickers.PickerLocationId.documentsLibrary;
         openPicker.fileTypeFilter.replaceAll([".htm", ".zip"]);
 
         openPicker.pickSingleFileAsync().done(function (file) {
             // Squirrel away a token for future access
-            app.file_token = Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
-            ZipHelper.Zip.open(file).done(function (html) {
-                var regex = /\"\/\/(.*?)\"/ig;
-                var result = html.replace(regex, "\"http://$1\"");
-
-                var clean_html = window.toStaticHTML(result);
-                app.editor.setValue(clean_html);
-            });
+            app.file_token = AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
+            if (file.fileType == ".zip") {
+                ZipHelper.Zip.readFirstFile(file).done(function (html) {
+                    var clean_html = window.toStaticHTML(html);
+                    app.editor.setValue(clean_html);
+                });
+            } else {
+                FileIO.readTextAsync(function (html) {
+                    var clean_html = window.toStaticHTML(html);
+                    app.editor.setValue(clean_html);
+                });
+            }
         });
     };
 
     app.save_file = function (args) {
         var text = app.editor.getValue();
         if (app.file_token == null) {
-            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
-            savePicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+            var savePicker = new Pickers.FileSavePicker();
+            savePicker.suggestedStartLocation = Pickers.PickerLocationId.documentsLibrary;
             savePicker.defaultFileExtension = ".htm";
             savePicker.suggestedFileName = "my_html";
             savePicker.fileTypeChoices.insert("HTML", [".htm"]);
@@ -58,14 +62,14 @@
             savePicker.pickSaveFileAsync().done(function (file) {
                 if (file) {
                     // Squirrel away a token for future access
-                    app.file_token = Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
-                    Windows.Storage.FileIO.writeTextAsync(file, text);
+                    app.file_token = AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
+                    FileIO.writeTextAsync(file, text);
                 }
             });
         } else {
-            Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.getFileAsync(app.file_token).done(function (file) {
+            AccessCache.StorageApplicationPermissions.futureAccessList.getFileAsync(app.file_token).done(function (file) {
                 if (file) {
-                    Windows.Storage.FileIO.writeTextAsync(file, text);
+                    FileIO.writeTextAsync(file, text);
                 }
             });
         }

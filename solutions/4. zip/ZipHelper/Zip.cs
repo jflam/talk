@@ -19,52 +19,41 @@ namespace ZipHelper
             }
         }
 
-        private static async Task<string> OpenInternal(StorageFile file)
-        {
-            var extension = Path.GetExtension(file.Name);
-            if (extension == ".zip")
+        // Helper method to workaround bug 669923
+        private async static Task<MemoryStream> CopyToMemoryStream(StorageFile file) {
+            var memoryStream = new MemoryStream();
+            using (var stream = await file.OpenStreamForReadAsync())
             {
-                try
+                stream.CopyTo(memoryStream);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+            }
+            return memoryStream;
+        }
+
+        // Private awaitable async function
+        private static async Task<string> ReadFirstFileInternal(StorageFile file)
+        {
+            using (var memoryStream = await CopyToMemoryStream(file)) 
+            {
+                using (var archive = new ZipArchive(memoryStream))
                 {
-                    // Copy the input stream to a MemoryStream to workaround bug 669923
-                    using (var memoryStream = new MemoryStream())
+                    // Return the first opened file
+                    if (archive.Entries.Count > 0)
                     {
-                        using (var stream = await file.OpenStreamForReadAsync())
-                        {
-                            stream.CopyTo(memoryStream);
-                            memoryStream.Seek(0, SeekOrigin.Begin);
-                            using (var archive = new ZipArchive(memoryStream))
-                            {
-                                // Return the first opened file
-                                if (archive.Entries.Count > 0)
-                                {
-                                    return CopyStreamToString(archive.Entries[0].Open());
-                                }
-                                else
-                                {
-                                    // Poor man's error handling
-                                    return "nothing in the archive";
-                                }
-                            }
-                        }
+                        return CopyStreamToString(archive.Entries[0].Open());
+                    }
+                    else
+                    {
+                        return String.Empty; // default case where there aren't any files
                     }
                 }
-                catch (Exception e)
-                {
-                    // Poor man's error handling
-                    return e.Message;
-                }
-            }
-            else
-            {
-                return CopyStreamToString(await file.OpenStreamForReadAsync());
             }
         }
 
         // Public exposed function that maps an IAsyncOperation<string> to Task<string>
-        public static IAsyncOperation<string> Open(StorageFile file)
+        public static IAsyncOperation<string> ReadFirstFile(StorageFile file)
         {
-            return AsyncInfo.Run(token => Zip.OpenInternal(file));
+            return AsyncInfo.Run(token => Zip.ReadFirstFileInternal(file));
         }
     }
 }

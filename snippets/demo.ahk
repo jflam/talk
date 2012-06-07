@@ -36,7 +36,7 @@ ls
 ::cat1::
 clipboard =
 (
-<h1>Hello, World!</h1>
+<h1>oh hai, world!</h1>
 
 <img src="http://www.hotimg.com/direct/dATedwu.gif">
 <img src="http://www.hotimg.com/direct/dATedwu.gif">
@@ -291,74 +291,43 @@ return
 ::r14::
 clipboard =
 (
-    app.open_file = function (args) {
-        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
-        openPicker.viewMode = Windows.Storage.Pickers.PickerViewMode.list;
-        openPicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
-        openPicker.fileTypeFilter.replaceAll([".htm"]);
-
-        openPicker.pickSingleFileAsync().done(function (file) {
-            Windows.Storage.FileIO.readTextAsync(file).done(function (html) {
-                var clean_html = window.toStaticHTML(html);
-                app.editor.setValue(clean_html);
-            });
-        });
-    };
-)
-send ^v
-return
-::r15::
-clipboard =
-(
-        <button id="cmdSave" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{icon:'save', label:'Save', section:'global', tooltip:'Save', type:'button'}"></button>
+    // Some aliases to make the code easier to read
+    var Pickers = Windows.Storage.Pickers;
+    var FileIO = Windows.Storage.FileIO;
+    var AccessCache = Windows.Storage.AccessCache;
 )
 send ^v
 return
 ::r16::
 clipboard =
 (
-        document.getElementById("cmdSave").addEventListener("click", app.save_file);
+    app.open_file = function (args) {
+        var openPicker = new Pickers.FileOpenPicker();
+        openPicker.viewMode = Pickers.PickerViewMode.list;
+        openPicker.suggestedStartLocation = Pickers.PickerLocationId.documentsLibrary;
+        openPicker.fileTypeFilter.replaceAll([".htm"]);
+
+        openPicker.pickSingleFileAsync().done(function (file) {
+            FileIO.readTextAsync(file).done(function (html) {
+                var clean_html = window.toStaticHTML(html);
+                app.editor.setValue(clean_html);
+            });
+        });
+    };
 )
 send ^v
 return
 ::r17::
 clipboard =
 (
-    app.save_file = function (args) {
-        var text = app.editor.getValue();
-        var savePicker = new Windows.Storage.Pickers.FileSavePicker();
-        savePicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
-        savePicker.defaultFileExtension = ".htm";
-        savePicker.suggestedFileName = "my_html";
-        savePicker.fileTypeChoices.insert("HTML", [".htm"]);
-
-        savePicker.pickSaveFileAsync().done(function (file) {
-            if (file) {
-                Windows.Storage.FileIO.writeTextAsync(file, text);
-            }
-        });
-    };
+        <button id="cmdSave" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{icon:'save', label:'Save', section:'global', tooltip:'Save', type:'button'}"></button>
 )
 send ^v
 return
 ::r18::
 clipboard =
 (
-    app.open_file = function (args) {
-        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
-        openPicker.viewMode = Windows.Storage.Pickers.PickerViewMode.list;
-        openPicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
-        openPicker.fileTypeFilter.replaceAll([".htm"]);
-
-        openPicker.pickSingleFileAsync().done(function (file) {
-            // Squirrel away a token for future access
-            app.file_token = Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
-            Windows.Storage.FileIO.readTextAsync(file).done(function (html) {
-                var clean_html = window.toStaticHTML(html);
-                app.editor.setValue(clean_html);
-            });
-        });
-    };
+        document.getElementById("cmdSave").addEventListener("click", app.save_file);
 )
 send ^v
 return
@@ -370,8 +339,8 @@ clipboard =
     app.save_file = function (args) {
         var text = app.editor.getValue();
         if (app.file_token == null) {
-            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
-            savePicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+            var savePicker = new Pickers.FileSavePicker();
+            savePicker.suggestedStartLocation = Pickers.PickerLocationId.documentsLibrary;
             savePicker.defaultFileExtension = ".htm";
             savePicker.suggestedFileName = "my_html";
             savePicker.fileTypeChoices.insert("HTML", [".htm"]);
@@ -379,18 +348,136 @@ clipboard =
             savePicker.pickSaveFileAsync().done(function (file) {
                 if (file) {
                     // Squirrel away a token for future access
-                    app.file_token = Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
-                    Windows.Storage.FileIO.writeTextAsync(file, text);
+                    app.file_token = AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
+                    FileIO.writeTextAsync(file, text);
                 }
             });
         } else {
-            Windows.Storage.AccessCache.StorageApplicationPermissions.futureAccessList.getFileAsync(app.file_token).done(function (file) {
+            AccessCache.StorageApplicationPermissions.futureAccessList.getFileAsync(app.file_token).done(function (file) {
                 if (file) {
-                    Windows.Storage.FileIO.writeTextAsync(file, text);
+                    FileIO.writeTextAsync(file, text);
                 }
             });
         }
     };
+)
+send ^v
+return
+::r20::
+clipboard =
+(
+    app.open_file = function (args) {
+        var openPicker = new Pickers.FileOpenPicker();
+        openPicker.viewMode = Pickers.PickerViewMode.list;
+        openPicker.suggestedStartLocation = Pickers.PickerLocationId.documentsLibrary;
+        openPicker.fileTypeFilter.replaceAll([".htm"]);
+
+        openPicker.pickSingleFileAsync().done(function (file) {
+            // Squirrel away a token for future access
+            app.file_token = AccessCache.StorageApplicationPermissions.futureAccessList.add(file);
+            FileIO.readTextAsync(file).done(function (html) {
+                var clean_html = window.toStaticHTML(html);
+                app.editor.setValue(clean_html);
+            });
+        });
+    };
+)
+send ^v
+return
+;*********************************************************************
+; Commands for Part 4
+;*********************************************************************
+::r21::
+clipboard = 
+(
+using System;
+using System.IO;
+using System.IO.Compression;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Storage;
+
+namespace Zip
+{
+    public sealed class Zip
+    {
+        // Inefficient copy 
+        private static string CopyStreamToString(Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        // Helper method to workaround bug 669923
+        private async static Task<MemoryStream> CopyToMemoryStream(StorageFile file) {
+            var memoryStream = new MemoryStream();
+            using (var stream = await file.OpenStreamForReadAsync())
+            {
+                stream.CopyTo(memoryStream);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+            }
+            return memoryStream;
+        }
+
+        // Private awaitable async function
+        private static async Task<string> ReadFirstFileInternal(StorageFile file)
+        {
+            using (var memoryStream = await CopyToMemoryStream(file)) 
+            {
+                using (var archive = new ZipArchive(memoryStream))
+                {
+                    // Return the first opened file
+                    if (archive.Entries.Count > 0)
+                    {
+                        return CopyStreamToString(archive.Entries[0].Open());
+                    }
+                    else
+                    {
+                        return String.Empty; // default case where there aren't any files
+                    }
+                }
+            }
+        }
+
+        // Public exposed function that maps an IAsyncOperation<string> to Task<string>
+        public static IAsyncOperation<string> ReadFirstFile(StorageFile file)
+        {
+            return AsyncInfo.Run(token => Zip.ReadFirstFileInternal(file));
+        }
+    }
+}
+)
+send ^v
+return
+::r22::
+clipboard = 
+(
+            if (file.fileType == ".zip") {
+                Zip.Zip.readFirstFile(file).done(function (html) {
+                    var clean_html = window.toStaticHTML(html);
+                    app.editor.setValue(clean_html);
+                });
+            } else {
+                FileIO.readTextAsync(function (html) {
+                    var clean_html = window.toStaticHTML(html);
+                    app.editor.setValue(clean_html);
+                });
+            }
+)
+send ^v
+return
+::r21::
+clipboard = 
+(
+)
+send ^v
+return
+::r21::
+clipboard = 
+(
 )
 send ^v
 return
