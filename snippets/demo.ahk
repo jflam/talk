@@ -46,6 +46,18 @@ clipboard =
 )
 send ^v
 return
+::cat2::
+clipboard = 
+(
+<h1>oh, hai world! Iz can danss!</h1>
+
+<img src="http://iunknown.azurewebsites.net/wp-content/uploads/2012/06/cat.gif">
+<img src="http://iunknown.azurewebsites.net/wp-content/uploads/2012/06/cat.gif">
+<img src="http://iunknown.azurewebsites.net/wp-content/uploads/2012/06/cat.gif">
+<img src="http://iunknown.azurewebsites.net/wp-content/uploads/2012/06/cat.gif">
+)
+send ^v
+return
 ::r1::
 clipboard =
 (
