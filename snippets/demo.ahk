@@ -168,7 +168,7 @@ clipboard =
       CodeMirror.keyMap.html_editor = {
           'Ctrl-Enter': function (cm) {
               var html = editor.getValue();
-              output.innerHTML = window.toStaticHTML(html);
+              output.innerHTML = html;
           },
           fallthrough: ["default"]
       };
