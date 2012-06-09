@@ -19,6 +19,10 @@ solutions/3. light up/Editor3/bld/**
 solutions/4. zip/Editor4/bld/**
 solutions/5. errors/CrashApp/Debug/**
 solutions/6. samples/Editor6/bld/**
+solutions/final/Editor/bld/**
+solutions/final/Zip/bin/**
+solutions/final/Zip/obj/**
+
 *_i.c
 *_p.c
 *.ilk
