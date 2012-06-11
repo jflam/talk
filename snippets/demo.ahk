@@ -58,6 +58,15 @@ clipboard =
 )
 send ^v
 return
+::win1::
+clipboard =
+(
+<h1>Hello, Windows 8!</h1>
+<video controls="controls" src="http://res2.windows.microsoft.com/resbox/en/6.2/main/66f89db7-9687-4b45-a423-ef7cb90b8e40_39.mp4" autoplay="autoplay" style="width:48vw">
+
+)
+send ^v
+return
 ::r1::
 clipboard =
 (
