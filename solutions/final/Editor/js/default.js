@@ -54,7 +54,7 @@
                     app.editor.setValue(clean_html);
                 });
             } else {
-                FileIO.readTextAsync(function (html) {
+                FileIO.readTextAsync(file).done(function (html) {
                     var clean_html = window.toStaticHTML(html);
                     app.editor.setValue(clean_html);
                 });
