@@ -58,6 +58,16 @@ clipboard =
 )
 send ^v
 return
+::pig1::
+clipboard =
+(
+<h1>Whee!</h1>
+
+<img src="http://localhost/pig.gif">
+<img src="http://localhost/pig.gif">
+)
+send ^v
+return
 ::win1::
 clipboard =
 (
@@ -186,7 +196,7 @@ clipboard =
 send ^v
 return
 ;*********************************************************************
-; Commands for Part 2 
+; Commands for Part 2 -- run these in Visual Studio
 ;*********************************************************************
 #IfWinNotActive, ahk_class Notepad2
 ::r8::
@@ -282,7 +292,7 @@ clipboard =
 send ^v
 return
 ;*********************************************************************
-; Commands for Part 3
+; Commands for Part 3 - integrating with Windows
 ;*********************************************************************
 ::r12::
 clipboard =
@@ -400,7 +410,7 @@ clipboard =
 send ^v
 return
 ;*********************************************************************
-; Commands for Part 4
+; Commands for Part 4 - adding the C# WinRT component
 ;*********************************************************************
 ::r20::
 clipboard = 
@@ -426,7 +436,6 @@ namespace Zip
             }
         }
 
-        // Helper method to workaround bug 669923
         private async static Task<MemoryStream> CopyToMemoryStream(StorageFile file) {
             var memoryStream = new MemoryStream();
             using (var stream = await file.OpenStreamForReadAsync())
@@ -460,7 +469,7 @@ namespace Zip
         // Public exposed function that maps an IAsyncOperation<string> to Task<string>
         public static IAsyncOperation<string> ReadFirstFile(StorageFile file)
         {
-            return AsyncInfo.Run(token => Zip.ReadFirstFileInternal(file));
+            return Zip.ReadFirstFileInternal(file).AsAsyncOperation();
         }
     }
 }
@@ -497,7 +506,7 @@ clipboard =
 send ^v
 return
 ;*********************************************************************
-; Commands for Part 5
+; Commands for Part 5 - integrating the search suggestions contract
 ;*********************************************************************
 ::r22::
 clipboard =
